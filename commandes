@@ -1,0 +1,167 @@
+echo "Enter your lucky number"
+read n
+if [ $n -eq 101 ];
+then
+echo "You got 1st prize"elif [ $n -eq 510 ];
+then
+echo "You got 2nd prize"
+elif [ $n -eq 999 ];
+then
+echo "You got 3rd prize"
+else
+echo "Sorry, try for the next time"
+fi
+#!/bin/sh
+temps=$(date '+%H')
+if [12 -ge $temps]; then (echo 'Bonjour')
+elif [17 -ge $temps]; then (echo 'bon après-midi')
+elif echo 'Bonne soirée'
+fi
+#!/bin/bash
+t=$(date +%H)
+a=12
+b=17
+if [ "$t" -lt $a ];
+then echo "Bonjour";
+elif [ "$t" -lt $b ];
+then echo "bon après-midi";
+else echo "Bonne soiree";
+fi
+$ cat for1.sh
+for j in {1..12}
+do
+for i in {1..49}
+do
+   printf "#"
+done
+printf "#\n"
+done
+L’objectif du projet est de répondre au besoin de déménager le Datacenter de l’Insee dans un contexte de fin de bail du site actuel. 
+Dans ce contexte, le projet a donc pour objectif de construire de nouveaux socles d’infrastructure IT résilients et de sécuriser le déménagement des Datacenters et la migration associée, tant d’un point de vue technique qu’opérationnelle.
+Un partenariat technologique a été conclu entre l’INSEE et Capgemini afin de fournir de l’accompagnement dans l’atteinte des objectifs suivants :
+La conception et la construction d’une nouvelle infrastructure IT au sein des Datacenter des Douanes à Osny et du ministère de l’agriculture à Toulouse
+La migration de la production informatique vers les nouveaux sites, selon une répartition à définir durant l’étape de conception
+La mise en œuvre d’un PRA(Plan de reprise d'activité), en respect du scénario décidé durant l’étape de conception, afin de garantir la continuité de l’activité en cas de sinistre sur l’un des Datacenters
+a) afficher nom et âge de chaque employé qui travaille IT au service de recherche.
+SELECT DISTINCT name, age
+FROM emp
+INNER JOIN works
+    on works.EID = emp.EID
+INNER JOIN dept
+    on works.DID = dept.DID
+where dname='IT' OR dname='research';
+B)Trouver les identificateurs des managers qui gèrent uniquement les département dont 
+le budget est supérieur à 100000
+SELECT DISTINCT managerid 
+FROM dept
+WHERE BUDGET > 100000 ;
+C) Afficher le nombre de salariés
+SELECT COUNT(eid)
+FROM emp ;
+d) Afficher le nombre de départements
+SELECT COUNT(did)
+FROM dept ;
+e) Afficher le département qui a le plus grand budget
+SELECT DID,DNAME,budget,MANAGERID
+FROM dept 
+WHERE BUDGET=(SELECT MAX(budget) FROM dept)
+;
+f) Afficher le nom et prénom du salarié qui a le plus grand salaire
+SELECT lastname,name
+FROM emp
+WHERE salary=(SELECT MAX(salary) FROM emp)
+;
+g) Afficher le plus rand salaire dans la table employé
+SELECT MAX(salary)
+FROM emp  
+;
+h) Afficher le deuxième salaire le plus haut
+ select MIN (salary) 
+ from (select emp.*
+       from emp
+       order by SALARY DESC)
+ where ROWNUM < 3  ;
+*******************************************************************************
+TP2 SHELL:
+Exercice 6:
+1) Chercher les fichiers qui commencent par: a
+ls | grep -E "^a"
+2) chercher les fichiers qui commence par a puis suivis de plusieurs caractères quelconques, puis d'un chiffre.
+ls | grep -E "^a.+[0-9]$"    // . n'importe quel caractère , + 1 ou plus
+3) chercher les fichiers qui commencent par 'ant'
+ls | grep -E "^a"
+4) Rechercher les fichiers qui ne commencent par un chiffre
+ ls | grep -v -E "^[0-9]"
+5) Rechercher les fichiers qui commencent par une lettre ou bien !
+ls -a /home/user1/ | grep^[0-9,\!] 
+6) Créer un fichier nommé <<!bonjour>>
+touch \!bonjour
+7) taper et expliquer les résultats des commandes :
+echo /* affiche ls: C:\Users\Student\Documents\MobaXterm\slash
+echo * affiche ls du repertoire courant
+Exercice 7:
+1) filtrage des caractères en miniscule:  2) majuscule 
+grep -E "[a-z]" test.txt                        [A-Z]
+3)caractères entre è et é:
+grep -E "è.+é" test.txt
+4) sans distinction:  -i
+5) Les chiffres :
+grep -E "[0-9]" test.txt
+6) Caractère non lettre :
+grep -i -E "[^a-z]" test.txt
+7) non chiffre:
+grep -E "[^0-9]" test.txt
+Exercice 8:
+1) Ligne commençant par a:
+grep -E "^a" test.txt
+2) Ligne commençant par t
+grep -E "^t" test.txt
+3) ligne commençant par t ou T
+grep -i -E "^t" test.txt
+4) ligne se finissant par a:
+grep -i -E "a$" anothertest.txt
+5) commence par D et finnisse par un chiffre
+grep -E "^D.+[0-9]" test.txt
+6) Minimum deux chiffres collés
+grep -i -E "[0-9]{2,}" test.txt
+7) Ligne contenant Tutu ou tata
+grep -E -e "lkh" -e "Tutu" tata.txt
+8)filtrage de chaine de caractere, ni tabulation ni espace:
+sed 's/\t//g;s/ //g' test1.txt
+Exercice 9:
+1) Donner la commande qui permet de transferer le contenu de deux fichieres dans un troisième:
+cat test1.txt test.txt > newtest.txt
+Exercice 10:
+***************************************************************************
+TP2:
+Exercice 1:
+1) Binôme ayant au moins un membre dans le groupe 2:
+grep -E G2 binomes.csv
+2) Binôme avec un membre dans le groupe 4 et aucun dans le groupe 2
+grep -v -E G2 binomes.csv | grep G4
+5) Binôme n'appartenant qu'a un seul groupe :
+grep -E ";G[0-9]" binomes.csv
+sed '/G..G/d' binomes.csv
+**************************************************
+créer une arboréscence de repertoires:
+mkdir -p rep/{rep1,rep2,rep3/{rep31,rep32},rep4}
+./*
+******************************************************************
+count lines of all files; and sort asc or desc:
+wc -l ./* | sort -n              //(or -r)
+******************************************************************
+Afficher la nième et la nième ligne :
+sed -n '4p;2p' test1.txt
+afficher le troisième caractère des 4 et deuxième lignes :
+sed -n '4p;2p' test1.txt | cut -c3
+**************************************************************************
+PROJET GLOBAL DATASTAGE:
+1: créer un nouvel utilisateur (BDD ) et se connecter
+2: 
+Ancienne : 
+((Left(L_3.NO_APPELANT,1) <> '+' Or Not(Num(Right(L_3.NO_APPELANT,19))) Or Len(L_3.NO_APPELANT) <> 12) And  
+(Not(Num(Left(L_3.NO_APPELANT,10))) Or Len(L_3.NO_APPELANT) <> 10)) Or 
+(((Left(L_3.NO_APPELE,1) <> '+' Or Not(Num(Right(L_3.NO_APPELE,19))) Or Len(L_3.NO_APPELE) <> 12) And  
+(Not(Num(Left(L_3.NO_APPELE,10))) Or Len(L_3.NO_APPELE) <>10))) 
+Nouvelle 
+If (Not(Num(L_3.NO_APPELANT)))
