@@ -1,0 +1,100 @@
+ --créer les tables 
+
+-- table agence
+
+create table AGENCE (
+   NomAgence  VARCHAR(20),
+   VilleAgence VARCHAR(20),
+   Adresse VARCHAR(40)
+)
+-- table client
+
+create table CLIENT (
+   NumClient  NUMBER,
+   NomClient  VARCHAR(20),
+   VilleClient VARCHAR(20)
+)
+
+-- table compte
+
+create table COMPTE (
+   NumCompte  NUMBER,
+   NomAgence  VARCHAR(20),
+   NumClient  NUMBER,
+   Solde  float
+)
+ --table emprunt 
+ 
+create table EMPRUNT (
+   NumEmprunt NUMBER,
+   NomAgence  VARCHAR(20),
+   NumClient  NUMBER,
+   Montant FLOAT,
+   DateEmprunt date,
+   DureeMois  number
+)
+
+-- insérer les données
+
+insert into AGENCE (NomAgence, VilleAgence, Adresse) VALUES ('Castellane', 'Marseille', '4 place Castellane');
+insert into AGENCE (NomAgence, VilleAgence, Adresse) VALUES ('Prefecture', 'Grenoble', '12 place de Verdun');
+insert into AGENCE (NomAgence, VilleAgence, Adresse) VALUES ('Longchamp', 'Marseille', '23 boulevard Longchamp');
+insert into CLIENT (NumClient, NomClient, VilleClient) VALUES (23, 'Grimaud', 'Marseille');
+insert into CLIENT (NumClient, NomClient, VilleClient) VALUES (24, 'Roberto', 'Grenoble');
+insert into CLIENT (NumClient, NomClient, VilleClient) VALUES (25, 'Albertini', 'Marseille');
+insert into CLIENT (NumClient, NomClient, VilleClient) VALUES (26, 'Poulard', 'Marseille');
+insert into CLIENT (NumClient, NomClient, VilleClient) VALUES (27, 'Grimaud', 'Grenoble');
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (411, 'Castellane', 23, 5605.34);
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (508, 'Prefecture', 23, 423.76);
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (525, 'Prefecture', 24, -45.98);
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (784, 'Castellane', 25, 64008.66);
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (800, 'Longchamp', 23, 12004.80);
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (802, 'Castellane', 26, -65.09);
+insert into COMPTE (NumCompte, NomAgence, NumClient, Solde) VALUES (803, 'Castellane', 27, 210.65);
+insert into EMPRUNT (NumEmprunt, NomAgence, NumClient, Montant, DateEmprunt, DureeMois) VALUES
+(11, 'Castellane', 23, 28000, TO_DATE('23-08-2012','DD-MM-YYYY'), 60);
+insert into EMPRUNT (NumEmprunt, NomAgence, NumClient, Montant, DateEmprunt, DureeMois) VALUES
+(12, 'Castellane', 25, 250000, TO_DATE('14-02-2013','DD-MM-YYYY'), 240);
+insert into EMPRUNT (NumEmprunt, NomAgence, NumClient, Montant, DateEmprunt, DureeMois) VALUES
+(13, 'Prefecture', 24, 3000, TO_DATE('10-09-2014','DD-MM-YYYY'), 24);
+insert into EMPRUNT (NumEmprunt, NomAgence, NumClient, Montant, DateEmprunt, DureeMois) VALUES
+(14, 'Prefecture', 23, 2500, TO_DATE('11-12-2014','DD-MM-YYYY'), 30);
+
+--les requetes sql :
+-- lister tous les noms de clients
+SELECT client.nomclient FROM CLIENT;
+-- idem mais sans doublons
+SELECT DISTINCT client.nomclient FROM CLIENT;
+-- lister tous les agences de Marseille
+SELECT DISTINCT agence.nomagence FROM AGENCE
+WHERE VILLEAGENCE='Marseille';
+--lister tous les numéros de compte des clients de nom Albertini 
+SELECT compte.numcompte FROM COMPTE,CLIENT
+WHERE compte.numclient = CLIENT.NUMCLIENT
+AND CLIENT.NOMCLIENT='Albertini';
+--lister l'adresse et la ville des agences dans lesquelles le client Grimaud a un compte
+SELECT distinct  agence.adresse,AGENCE.VILLEAGENCE,CLIENT.NOMCLIENT FROM AGENCE,CLIENT,COMPTE
+where CLIENT.NUMCLIENT=COMPTE.NUMCLIENT
+and CLIENT.NOMCLIENT='Grimaud';
+--lister les agences chez lesquelles aucun emprunt a été fait.
+SELECT DISTINCT agence.nomagence FROM AGENCE
+WHERE NOMAGENCE NOT IN (SELECT nomagence FROM EMPRUNT);
+--Lister le nom des clients qui ont contracté un emprunt superieur à 10000 euros 
+SELECT DISTINCT client.nomclient FROM CLIENT,EMPRUNT
+WHERE emprunt.numclient = CLIENT.NUMCLIENT
+AND EMPRUNT.MONTANT>10000;
+-- lister le numéro de compte et le nom des clients qui sont à découvert
+SELECT compte.numcompte, CLIENT.NOMCLIENT FROM CLIENT,COMPTE
+WHERE compte.numclient = CLIENT.NUMCLIENT
+AND COMPTE.SOLDE<0;
+--lister le nom des clients qui ont un compte à Marseille et\ou à grenoble.
+SELECT DISTINCT client.nomclient FROM CLIENT,AGENCE
+WHERE AGENCE.VILLEAGENCE=CLIENT.VILLECLIENT
+AND (AGENCE.VILLEAGENCE='Marseille' OR AGENCE.VILLEAGENCE='Grenoble');
+--lister le nom des clients qui ont un compte et un emprunt à Marseille 
+SELECT distinct client.nomclient FROM client, EMPRUNT,AGENCE
+WHERE EMPRUNT.NUMCLIENT=client.NUMCLIENT AND client.VILLECLIENT=AGENCE.VILLEAGENCE
+AND EMPRUNT.MONTANT<>0 AND AGENCE.VILLEAGENCE='Marseille';
+--lister le nom des clients qui ont un compte dans une autre ville que celle où ils vivent leur
+SELECT DISTINCT client.nomclient FROM CLIENT,AGENCE,COMPTE
+WHERE CLIENT.NUMCLIENT=COMPTE.NUMCLIENT AND COMPTE.NOMAGENCE=AGENCE.NOMAGENCE AND CLIENT.VILLECLIENt<>AGENCE.VILLEAGENCE
