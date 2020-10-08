@@ -1,0 +1,22 @@
+-- script 1
+
+mkdir "$1"_remani_$(date +"%d-%m-%Y")
+
+cd "$1"_remani_$(date +"%d-%m-%Y")
+
+for i in {1..500};
+
+do 
+touch remani_${i}"_$(date +"%d-%m-%Y")".txt;
+
+done 
+
+
+script  2
+
+mkdir "$1"_saad_$(date +"%d-%m-%Y")
+for i in {1..500};
+
+do 
+cp "$1"_remani_$(date +"%d-%m-%Y")/remani_${i}"_$(date +"%d-%m-%Y")".txt  "$1"_saad_$(date +"%d-%m-%Y")/COPIE_REMANI_${i}_$(date +"%d-%m-%Y")
+done 
